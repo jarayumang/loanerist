@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "6572051136",
+    "project_id": "loanerist",
+    "storage_bucket": "loanerist.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:6572051136:android:4ae7a83d6a09e157383b25",
+        "android_client_info": {
+          "package_name": "com.example.loanerist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "6572051136-ohipm8j1npv4vb1687sharj5fioa7p97.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnSYamn3oa-kMICRacJmSO4NdS3begDhc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "6572051136-ohipm8j1npv4vb1687sharj5fioa7p97.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,17 +1,36 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:loanerist/card.dart';
+import 'package:loanerist/login.dart';
 
-void main() => runApp(const MyApp());
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  static const String _title = 'Flutter Code Sample';
-
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: _title,
-      home: MyStatefulWidget(),
+    return MaterialApp(
+      title: 'App',
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return const MyStatefulWidget();
+          } else {
+            return const AuthScreen();
+          }
+        },
+      ),
     );
   }
 }
@@ -29,13 +48,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     ListView(
       scrollDirection: Axis.vertical,
       children: <Widget>[
-        Container(
-          height: 100.0,
-          color: Colors.red,
+        const Loan(
+          color1: Colors.red,
+          text1: Text('blue'),
         ),
-        Container(
-          height: 100.0,
-          color: Colors.blue,
+        const Loan(
+          color1: Colors.blue,
+          text1: Text('red'),
         ),
         Container(
           height: 100.0,
@@ -70,6 +89,19 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           color: Colors.orange,
         ),
       ],
+    ),
+    const Text(
+      'Index 1: Business',
+    ),
+    Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Center(
+        child: ElevatedButton(
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+            },
+            child: const Text('Sign Out')),
+      ),
     ),
   ];
 
