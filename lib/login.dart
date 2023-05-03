@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loanerist/register.dart';
 
 import 'auth.dart';
 
@@ -40,11 +41,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
     setState(() => _loading = true);
 
-    if (_isLogin) {
-      await Auth().signInWithEmailAndPassword(email, password);
-    } else {
-      await Auth().registerWithEmailAndPassword(email, password);
-    }
+    await Auth().signInWithEmailAndPassword(email, password);
 
     setState(() => _loading = false);
   }
@@ -98,29 +95,29 @@ class _AuthScreenState extends State<AuthScreen> {
                     },
                     decoration: InputDecoration(
                       contentPadding:
-                          const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
+                      const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
                       hintStyle: GoogleFonts.openSans(
                         textStyle: const TextStyle(fontSize: 12),
                       ),
                       hintText: 'john.doe@mail.com',
                       enabledBorder: OutlineInputBorder(
                         borderSide:
-                            const BorderSide(width: 1, color: Colors.black12),
+                        const BorderSide(width: 1, color: Colors.black12),
                         borderRadius: BorderRadius.circular(50.0),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide:
-                            const BorderSide(width: 2, color: Colors.black),
+                        const BorderSide(width: 2, color: Colors.black),
                         borderRadius: BorderRadius.circular(50.0),
                       ),
                       errorBorder: OutlineInputBorder(
                         borderSide:
-                            const BorderSide(width: 1, color: Colors.red),
+                        const BorderSide(width: 1, color: Colors.red),
                         borderRadius: BorderRadius.circular(50.0),
                       ),
                       focusedErrorBorder: OutlineInputBorder(
                         borderSide:
-                            const BorderSide(width: 1, color: Colors.red),
+                        const BorderSide(width: 1, color: Colors.red),
                         borderRadius: BorderRadius.circular(50.0),
                       ),
                     ),
@@ -155,29 +152,29 @@ class _AuthScreenState extends State<AuthScreen> {
                     },
                     decoration: InputDecoration(
                       contentPadding:
-                          const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
+                      const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
                       hintStyle: GoogleFonts.openSans(
                         textStyle: const TextStyle(fontSize: 12),
                       ),
                       hintText: 'min. of 8 characters',
                       enabledBorder: OutlineInputBorder(
                         borderSide:
-                            const BorderSide(width: 1, color: Colors.black12),
+                        const BorderSide(width: 1, color: Colors.black12),
                         borderRadius: BorderRadius.circular(50.0),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide:
-                            const BorderSide(width: 2, color: Colors.black),
+                        const BorderSide(width: 2, color: Colors.black),
                         borderRadius: BorderRadius.circular(50.0),
                       ),
                       errorBorder: OutlineInputBorder(
                         borderSide:
-                            const BorderSide(width: 1, color: Colors.red),
+                        const BorderSide(width: 1, color: Colors.red),
                         borderRadius: BorderRadius.circular(50.0),
                       ),
                       focusedErrorBorder: OutlineInputBorder(
                         borderSide:
-                            const BorderSide(width: 1, color: Colors.red),
+                        const BorderSide(width: 1, color: Colors.red),
                         borderRadius: BorderRadius.circular(50.0),
                       ),
                     ),
@@ -196,23 +193,23 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                           ),
                           onPressed:
-                              _isButtonDisabled ? null : () => handleSubmit(),
+                          _isButtonDisabled ? null : () => handleSubmit(),
                           child: _loading
                               ? const SizedBox(
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 2,
-                                  ),
-                                )
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
                               : Text(
-                                  _isLogin ? 'Login' : 'Register',
-                                  style: GoogleFonts.openSans(
-                                    textStyle: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ))),
+                            'Login',
+                            style: GoogleFonts.openSans(
+                              textStyle: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ))),
                   const SizedBox(
                     height: 30,
                   ),
@@ -240,17 +237,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             ..onTap = () {
                               Navigator.push(context, MaterialPageRoute<void>(
                                 builder: (BuildContext context) {
-                                  return Scaffold(
-                                    appBar: AppBar(
-                                      title: const Text('Next page'),
-                                    ),
-                                    body: const Center(
-                                      child: Text(
-                                        'This is the next page',
-                                        style: TextStyle(fontSize: 24),
-                                      ),
-                                    ),
-                                  );
+                                  return const RegisterScreen();
                                 },
                               ));
                             },
