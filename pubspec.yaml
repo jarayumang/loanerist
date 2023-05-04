@@ -20,3 +20,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/forgot-password.jpg
+    - assets/images/login.jpg
+    - assets/images/otp.jpg
+    - assets/images/reset-password.jpg
+    - assets/images/signup.jpg

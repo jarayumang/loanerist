@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:loanerist/card.dart';
 import 'package:loanerist/login.dart';
 
@@ -45,6 +46,9 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   int _selectedIndex = 0;
   final List<Widget> _widgetOptions = <Widget>[
+    const Text(
+      'Index 0: Dashboard',
+    ),
     ListView(
       scrollDirection: Axis.vertical,
       children: <Widget>[
@@ -91,7 +95,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       ],
     ),
     const Text(
-      'Index 1: Business',
+      'Index 2: Business',
     ),
     Padding(
       padding: const EdgeInsets.all(16.0),
@@ -114,42 +118,53 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        title: Text('My Finances', style: TextStyle(color: Colors.amber[800])),
-        actions: <Widget>[
-          IconButton(
-            color: Colors.amber[800],
-            icon: const Icon(
-              Icons.add,
-            ),
-            tooltip: 'Go to the next page',
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute<void>(
-                builder: (BuildContext context) {
-                  return Scaffold(
-                    appBar: AppBar(
-                      title: const Text('Next page'),
-                    ),
-                    body: const Center(
-                      child: Text(
-                        'This is the next page',
-                        style: TextStyle(fontSize: 24),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(75),
+        child: AppBar(
+          toolbarHeight: 75,
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          title: Text('Loanerist',
+              style: GoogleFonts.openSans(
+                  textStyle: TextStyle(
+                      color: Colors.amber[800],
+                      fontSize: 25,
+                      fontWeight: FontWeight.w500))),
+          actions: <Widget>[
+            IconButton(
+              color: Colors.amber[800],
+              icon: const Icon(
+                Icons.add_circle_outlined,
+                size: 30,
+              ),
+              tooltip: 'Go to the next page',
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute<void>(
+                  builder: (BuildContext context) {
+                    return Scaffold(
+                      appBar: AppBar(
+                        title: const Text('Next page'),
                       ),
-                    ),
-                  );
-                },
-              ));
-            },
-          ),
-        ],
+                      body: const Center(
+                        child: Text(
+                          'This is the next page',
+                          style: TextStyle(fontSize: 24),
+                        ),
+                      ),
+                    );
+                  },
+                ));
+              },
+            ),
+          ],
+        ),
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: SizedBox(
-        height: 70,
+        height: 75,
         child: Container(
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
@@ -164,20 +179,26 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               topRight: Radius.circular(30.0),
             ),
             child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.credit_score,
+                  icon: Icon(Icons.dashboard_outlined,
                       size: _selectedIndex == 0 ? 28 : 23),
+                  label: 'Dashboard',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.credit_score,
+                      size: _selectedIndex == 1 ? 28 : 23),
                   label: 'Loans',
                 ),
                 BottomNavigationBarItem(
                   icon:
-                      Icon(Icons.payments, size: _selectedIndex == 1 ? 28 : 23),
+                      Icon(Icons.payments, size: _selectedIndex == 2 ? 28 : 23),
                   label: 'Bills',
                 ),
                 BottomNavigationBarItem(
                   icon:
-                      Icon(Icons.settings, size: _selectedIndex == 2 ? 28 : 23),
+                      Icon(Icons.settings, size: _selectedIndex == 3 ? 28 : 23),
                   label: 'Settings',
                 ),
               ],
