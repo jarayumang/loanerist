@@ -13,26 +13,10 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final bool _isLogin = true; //false = register, true=login
   bool _loading = false;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _isButtonDisabled = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _emailController.addListener(_onTextChanged);
-    _passwordController.addListener(_onTextChanged);
-  }
-
-  void _onTextChanged() {
-    setState(() {
-      _isButtonDisabled = _emailController.text.isEmpty;
-      _isButtonDisabled = _passwordController.text.isEmpty;
-    });
-  }
 
   handleSubmit() async {
     if (!_formKey.currentState!.validate()) return;
@@ -49,167 +33,155 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: const Color(0xFFfffefe),
       body: SafeArea(
         child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
             child: Form(
               key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Loanerist",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
+                  Image.asset('assets/images/login.jpg'),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Login",
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
+                    ),
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text(
-                    "Manage your finances wisely",
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Your email address",
-                        style: GoogleFonts.openSans(
-                          textStyle: const TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold),
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.center
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.alternate_email_outlined),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                        child: SizedBox(
+                          width: 300,
+                          child: TextFormField(
+                            controller: _emailController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your email';
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintStyle: GoogleFonts.openSans(
+                                textStyle: const TextStyle(fontSize: 12),
+                              ),
+                              hintText: 'Email ID',
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  TextFormField(
-                    controller: _emailController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      contentPadding:
-                      const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
-                      hintStyle: GoogleFonts.openSans(
-                        textStyle: const TextStyle(fontSize: 12),
-                      ),
-                      hintText: 'john.doe@mail.com',
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                        const BorderSide(width: 1, color: Colors.black12),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                        const BorderSide(width: 2, color: Colors.black),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide:
-                        const BorderSide(width: 1, color: Colors.red),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderSide:
-                        const BorderSide(width: 1, color: Colors.red),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                    ),
+                    ],
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Choose a password",
-                        style: GoogleFonts.openSans(
-                          textStyle: const TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold),
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.center
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.key_outlined),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                        child: SizedBox(
+                          width: 300,
+                          child: TextFormField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your password';
+                              }
+                              if (value.length < 8) {
+                                return 'Password too short';
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintStyle: GoogleFonts.openSans(
+                                textStyle: const TextStyle(fontSize: 12),
+                              ),
+                              hintText: 'Password',
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      if (value.length < 8) {
-                        return 'Password too short';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      contentPadding:
-                      const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
-                      hintStyle: GoogleFonts.openSans(
-                        textStyle: const TextStyle(fontSize: 12),
-                      ),
-                      hintText: 'min. of 8 characters',
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                        const BorderSide(width: 1, color: Colors.black12),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                        const BorderSide(width: 2, color: Colors.black),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide:
-                        const BorderSide(width: 1, color: Colors.red),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderSide:
-                        const BorderSide(width: 1, color: Colors.red),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                    ),
+                    ],
                   ),
                   const SizedBox(
-                    height: 30,
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Forgot Password?',
+                              style: GoogleFonts.openSans(
+                                textStyle: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF64a4fe)),
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute<void>(
+                                    builder: (BuildContext context) {
+                                      return const RegisterScreen();
+                                    },
+                                  ));
+                                },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 15,
                   ),
                   SizedBox(
                       height: 45,
                       width: double.infinity,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.amber,
+                            backgroundColor: const Color(0xFF64a4fe),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50.0),
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
                           ),
-                          onPressed:
-                          _isButtonDisabled ? null : () => handleSubmit(),
+                          onPressed: () => handleSubmit(),
                           child: _loading
                               ? const SizedBox(
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.black,
+                                    strokeWidth: 2,
+                                  ),
+                                )
                               : Text(
-                            'Login',
-                            style: GoogleFonts.openSans(
-                              textStyle: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ))),
+                                  'Login',
+                                  style: GoogleFonts.openSans(
+                                    textStyle: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black),
+                                  ),
+                                ))),
                   const SizedBox(
                     height: 30,
                   ),
@@ -217,7 +189,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: 'Don\'t have an account? ',
+                          text: 'New to Loanerist? ',
                           style: GoogleFonts.openSans(
                             textStyle: const TextStyle(
                                 fontSize: 13,
@@ -231,7 +203,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             textStyle: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
-                                color: Colors.black),
+                                color: Color(0xFF64a4fe)),
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {

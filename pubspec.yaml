@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^4.0.4
+  flutter_settings_screens: ^0.3.3-null-safety+2
 
 dev_dependencies:
   flutter_test:
@@ -20,3 +21,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/forgot-password.jpg
+    - assets/images/login.jpg
+    - assets/images/otp.jpg
+    - assets/images/reset-password.jpg
+    - assets/images/signup.jpg
