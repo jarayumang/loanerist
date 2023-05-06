@@ -13,4 +13,8 @@ class Auth {
     final user = await _auth.signInWithEmailAndPassword(
         email: email, password: password);
   }
+
+  Future<void> _signOut() async {
+    await _auth.signOut();
+  }
 }
