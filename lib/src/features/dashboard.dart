@@ -12,7 +12,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return const Text(
       'Dashboard',
-      style: TextStyle(fontSize: 30),
+      style: TextStyle(fontSize: 30, fontFamily: 'GilroyBlack'),
     );
   }
 }

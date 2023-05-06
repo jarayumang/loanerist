@@ -27,3 +27,28 @@ flutter:
     - assets/images/otp.jpg
     - assets/images/reset-password.jpg
     - assets/images/signup.jpg
+  fonts:
+    - family: GilroyLight
+      fonts:
+        - asset: assets/fonts/Gilroy/Gilroy-Light.ttf
+    - family: GilroyRegular
+      fonts:
+        - asset: assets/fonts/Gilroy/Gilroy-Regular.ttf
+    - family: GilroyMedium
+      fonts:
+        - asset: assets/fonts/Gilroy/Gilroy-Medium.ttf
+    - family: GilroyHeavy
+      fonts:
+        - asset: assets/fonts/Gilroy/Gilroy-Heavy.ttf
+    - family: GilroySemiBold
+      fonts:
+        - asset: assets/fonts/Gilroy/Gilroy-SemiBold.ttf
+    - family: GilroyBold
+      fonts:
+        - asset: assets/fonts/Gilroy/Gilroy-Bold.ttf
+    - family: GilroyExtraBold
+      fonts:
+        - asset: assets/fonts/Gilroy/Gilroy-ExtraBold.ttf
+    - family: GilroyBlack
+      fonts:
+        - asset: assets/fonts/Gilroy/Gilroy-Black.ttf
