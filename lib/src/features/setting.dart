@@ -1,11 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:loanerist/src/constants/color.dart';
 
-class Setting extends StatelessWidget {
-  const Setting({Key? key}) : super(key: key);
-  static const keyDarkMode = 'key-dark-mode';
+import '../authentication/login.dart';
 
+class Setting extends StatefulWidget {
+  const Setting({Key? key}) : super(key: key);
+
+  @override
+  State<Setting> createState() => _SettingState();
+}
+
+class _SettingState extends State<Setting> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,24 +50,26 @@ class Setting extends StatelessWidget {
                   // onTap: ,
                 ),
                 SimpleSettingsTile(
-                  title: 'Logout',
-                  titleTextStyle: TextStyle(
-                      color: ColorConstants.lightBlack,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
-                  subtitle: '',
-                  leading: Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          color: ColorConstants.appBlue,
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Icon(
-                        Icons.logout_rounded,
-                        color: ColorConstants.darkWhite,
-                        size: 20,
-                      )),
-                  // onTap:
-                ),
+                    title: 'Logout',
+                    titleTextStyle: TextStyle(
+                        color: ColorConstants.lightBlack,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
+                    subtitle: '',
+                    leading: Container(
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            color: ColorConstants.appBlue,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: Icon(
+                          Icons.logout_rounded,
+                          color: ColorConstants.darkWhite,
+                          size: 20,
+                        )),
+                    onTap: () {
+                      logout(context);
+                    }),
                 SimpleSettingsTile(
                   title: 'Delete Account',
                   titleTextStyle: TextStyle(
@@ -78,8 +87,8 @@ class Setting extends StatelessWidget {
                         color: ColorConstants.darkWhite,
                         size: 20,
                       )),
-                  // onTap: ,
                 ),
+                // onTap: ,
               ],
             ),
             const SizedBox(
@@ -136,5 +145,11 @@ class Setting extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> logout(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
 }

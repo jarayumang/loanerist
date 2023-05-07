@@ -1,34 +1,28 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loanerist/src/authentication/register.dart';
+import 'package:loanerist/src/features/home.dart';
 
-import 'auth.dart';
-
-class AuthScreen extends StatefulWidget {
-  const AuthScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   bool _loading = false;
+
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  handleSubmit() async {
-    if (!_formKey.currentState!.validate()) return;
-    final email = _emailController.value.text;
-    final password = _passwordController.value.text;
+  final _auth = FirebaseAuth.instance;
 
-    setState(() => _loading = true);
-
-    await Auth().signInWithEmailAndPassword(email, password);
-
-    setState(() => _loading = false);
-  }
+  String? errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -66,13 +60,25 @@ class _AuthScreenState extends State<AuthScreen> {
                         child: SizedBox(
                           width: 300,
                           child: TextFormField(
+                            autofocus: false,
                             controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your email';
+                              if (value!.isEmpty) {
+                                return ("Please Enter Your Email");
+                              }
+                              // reg expression for email validation
+                              if (!RegExp(
+                                      "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                                  .hasMatch(value)) {
+                                return ("Please Enter a valid email");
                               }
                               return null;
                             },
+                            onSaved: (value) {
+                              _emailController.text = value!;
+                            },
+                            textInputAction: TextInputAction.next,
                             decoration: InputDecoration(
                               hintStyle: GoogleFonts.openSans(
                                 textStyle: const TextStyle(fontSize: 12),
@@ -97,17 +103,22 @@ class _AuthScreenState extends State<AuthScreen> {
                         child: SizedBox(
                           width: 300,
                           child: TextFormField(
+                            autofocus: false,
                             controller: _passwordController,
                             obscureText: true,
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
+                              RegExp regex = new RegExp(r'^.{6,}$');
+                              if (value!.isEmpty) {
+                                return ("Password is required for login");
                               }
-                              if (value.length < 8) {
-                                return 'Password too short';
+                              if (!regex.hasMatch(value)) {
+                                return ("Enter Valid Password(Min. 6 Character)");
                               }
-                              return null;
                             },
+                            onSaved: (value) {
+                              _passwordController.text = value!;
+                            },
+                            textInputAction: TextInputAction.done,
                             decoration: InputDecoration(
                               hintStyle: GoogleFonts.openSans(
                                 textStyle: const TextStyle(fontSize: 12),
@@ -164,7 +175,10 @@ class _AuthScreenState extends State<AuthScreen> {
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                           ),
-                          onPressed: () => handleSubmit(),
+                          onPressed: () {
+                            signIn(_emailController.text,
+                                _passwordController.text);
+                          },
                           child: _loading
                               ? const SizedBox(
                                   height: 20,
@@ -222,5 +236,68 @@ class _AuthScreenState extends State<AuthScreen> {
             )),
       ),
     );
+  }
+
+  void signIn(String email, String password) async {
+    if (_formKey.currentState!.validate()) {
+      setState(() => _loading = true);
+      try {
+        await _auth
+            .signInWithEmailAndPassword(email: email, password: password)
+            .then((uid) => {
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(SnackBar(
+                      elevation: 0,
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.transparent,
+                      content: AwesomeSnackbarContent(
+                        title: 'Congrats!',
+                        message: 'Login Successful',
+                        contentType: ContentType.success,
+                      ),
+                    )),
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const HomePage())),
+                });
+      } on FirebaseAuthException catch (error) {
+        switch (error.code) {
+          case "invalid-email":
+            errorMessage = "Your email address appears to be malformed.";
+            break;
+          case "wrong-password":
+            errorMessage = "Your password is wrong.";
+            break;
+          case "user-not-found":
+            errorMessage = "User with this email doesn't exist.";
+            break;
+          case "user-disabled":
+            errorMessage = "User with this email has been disabled.";
+            break;
+          case "too-many-requests":
+            errorMessage = "Too many requests";
+            break;
+          case "operation-not-allowed":
+            errorMessage = "Signing in with Email and Password is not enabled.";
+            break;
+          default:
+            errorMessage = "An undefined error happened.";
+        }
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(
+            /// need to set following properties for best effect of awesome_snackbar_content
+            elevation: 0,
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            content: AwesomeSnackbarContent(
+              title: 'Oh No!',
+              message: errorMessage!,
+              contentType: ContentType.failure,
+            ),
+          ));
+      }
+    }
+    setState(() => _loading = false);
   }
 }
