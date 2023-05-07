@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:loanerist/register.dart';
+import 'package:loanerist/src/authentication/register.dart';
 
 import 'auth.dart';
 

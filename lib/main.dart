@@ -36,6 +36,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'App',
+      theme: ThemeData(fontFamily: 'Gilroy'),
       home: Scaffold(
         body: _screens[_selectedScreenIndex]["screen"],
         bottomNavigationBar: Container(
