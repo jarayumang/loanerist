@@ -1,8 +1,12 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loanerist/src/authentication/login.dart';
+import 'package:loanerist/src/constants/color.dart';
 import 'package:loanerist/src/features/home.dart';
 
 import '../models/user_model.dart';
@@ -15,312 +19,239 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _auth = FirebaseAuth.instance;
-
   bool _loading = false;
   String? errorMessage;
 
-  // our form key
+  final _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
-
-  // editing Controller
   final _nameEditingController = TextEditingController();
   final _emailEditingController = TextEditingController();
   final _passwordEditingController = TextEditingController();
-  final _confirmPasswordEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+      backgroundColor: const Color(0xFFfffefe),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new),
-          color: Colors.amber,
+          icon: const Icon(Icons.arrow_back_outlined),
+          color: ColorConstants.appBlue,
           onPressed: () => Navigator.of(context).pop(),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
       ),
-      body: SafeArea(
-        child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Register",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Text(
-                    "Start your journey with us and enjoy peace of mind.",
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                    child: Align(
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Padding(
+              padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset('assets/images/signup.jpg'),
+                    const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "Your email address",
-                        style: GoogleFonts.openSans(
-                          textStyle: const TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold),
-                        ),
+                        "Sign up",
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.w800),
                       ),
                     ),
-                  ),
-                  TextFormField(
-                    autofocus: false,
-                    controller: _nameEditingController,
-                    keyboardType: TextInputType.name,
-                    validator: (value) {
-                      RegExp regex = new RegExp(r'^.{3,}$');
-                      if (value!.isEmpty) {
-                        return ("Name cannot be Empty");
-                      }
-                      if (!regex.hasMatch(value)) {
-                        return ("Enter Valid name(Min. 3 Character)");
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _nameEditingController.text = value!;
-                    },
-                    textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(
-                      contentPadding:
-                          const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
-                      hintStyle: GoogleFonts.openSans(
-                        textStyle: const TextStyle(fontSize: 12),
-                      ),
-                      hintText: 'john.doe@mail.com',
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(width: 1, color: Colors.black12),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(width: 2, color: Colors.black),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(width: 1, color: Colors.red),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(width: 1, color: Colors.red),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
+                    const SizedBox(
+                      height: 10,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextFormField(
-                    autofocus: false,
-                    controller: _emailEditingController,
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return ("Please Enter Your Email");
-                      }
-                      // reg expression for email validation
-                      if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
-                          .hasMatch(value)) {
-                        return ("Please Enter a valid email");
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _emailEditingController.text = value!;
-                    },
-                    textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(
-                      contentPadding:
-                          const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
-                      hintStyle: GoogleFonts.openSans(
-                        textStyle: const TextStyle(fontSize: 12),
-                      ),
-                      hintText: 'john.doe@mail.com',
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(width: 1, color: Colors.black12),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(width: 2, color: Colors.black),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(width: 1, color: Colors.red),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(width: 1, color: Colors.red),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.badge_outlined),
+                        Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                            child: SizedBox(
+                              width: 300,
+                              child: TextFormField(
+                                autofocus: false,
+                                controller: _nameEditingController,
+                                keyboardType: TextInputType.name,
+                                validator: (value) {
+                                  RegExp regex = RegExp(r'^.{3,}$');
+                                  if (value!.isEmpty) {
+                                    return ("Name cannot be Empty");
+                                  }
+                                  if (!regex.hasMatch(value)) {
+                                    return ("Enter Valid name(Min. 3 Character)");
+                                  }
+                                },
+                                onSaved: (value) {
+                                  _nameEditingController.text = value!;
+                                },
+                                textInputAction: TextInputAction.next,
+                                decoration: InputDecoration(
+                                  hintStyle: GoogleFonts.openSans(
+                                    textStyle: const TextStyle(fontSize: 12),
+                                  ),
+                                  hintText: 'Name',
+                                ),
+                              ),
+                            ))
+                      ],
                     ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Choose a password",
-                        style: GoogleFonts.openSans(
-                          textStyle: const TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold),
-                        ),
-                      ),
+                    const SizedBox(
+                      height: 10,
                     ),
-                  ),
-                  TextFormField(
-                    autofocus: false,
-                    controller: _passwordEditingController,
-                    obscureText: true,
-                    validator: (value) {
-                      RegExp regex = new RegExp(r'^.{6,}$');
-                      if (value!.isEmpty) {
-                        return ("Password is required for login");
-                      }
-                      if (!regex.hasMatch(value)) {
-                        return ("Enter Valid Password(Min. 6 Character)");
-                      }
-                    },
-                    onSaved: (value) {
-                      _passwordEditingController.text = value!;
-                    },
-                    textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(
-                      contentPadding:
-                          const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
-                      hintStyle: GoogleFonts.openSans(
-                        textStyle: const TextStyle(fontSize: 12),
-                      ),
-                      hintText: 'min. of 8 characters',
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(width: 1, color: Colors.black12),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(width: 2, color: Colors.black),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(width: 1, color: Colors.red),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(width: 1, color: Colors.red),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.alternate_email_outlined),
+                        Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                            child: SizedBox(
+                              width: 300,
+                              child: TextFormField(
+                                autofocus: false,
+                                controller: _emailEditingController,
+                                keyboardType: TextInputType.emailAddress,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return ("Please Enter Your Email");
+                                  }
+                                  // reg expression for email validation
+                                  if (!RegExp(
+                                          "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                                      .hasMatch(value)) {
+                                    return ("Please Enter a valid email");
+                                  }
+                                  return null;
+                                },
+                                onSaved: (value) {
+                                  _emailEditingController.text = value!;
+                                },
+                                textInputAction: TextInputAction.next,
+                                decoration: InputDecoration(
+                                  hintStyle: GoogleFonts.openSans(
+                                    textStyle: const TextStyle(fontSize: 12),
+                                  ),
+                                  hintText: 'Email ID',
+                                ),
+                              ),
+                            ))
+                      ],
                     ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  TextFormField(
-                    autofocus: false,
-                    controller: _confirmPasswordEditingController,
-                    obscureText: true,
-                    validator: (value) {
-                      if (_confirmPasswordEditingController.text !=
-                          _passwordEditingController.text) {
-                        return "Password don't match";
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _confirmPasswordEditingController.text = value!;
-                    },
-                    textInputAction: TextInputAction.done,
-                    decoration: InputDecoration(
-                      contentPadding:
-                          const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
-                      hintStyle: GoogleFonts.openSans(
-                        textStyle: const TextStyle(fontSize: 12),
-                      ),
-                      hintText: 'min. of 8 characters',
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(width: 1, color: Colors.black12),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(width: 2, color: Colors.black),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(width: 1, color: Colors.red),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(width: 1, color: Colors.red),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
+                    const SizedBox(
+                      height: 10,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  SizedBox(
-                      height: 45,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.amber,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50.0),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.key_outlined),
+                        Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                            child: SizedBox(
+                              width: 300,
+                              child: TextFormField(
+                                autofocus: false,
+                                controller: _passwordEditingController,
+                                obscureText: true,
+                                validator: (value) {
+                                  RegExp regex = RegExp(r'^.{6,}$');
+                                  if (value!.isEmpty) {
+                                    return ("Password is required for login");
+                                  }
+                                  if (!regex.hasMatch(value)) {
+                                    return ("Enter Valid Password(Min. 6 Character)");
+                                  }
+                                },
+                                onSaved: (value) {
+                                  _passwordEditingController.text = value!;
+                                },
+                                textInputAction: TextInputAction.next,
+                                decoration: InputDecoration(
+                                  hintStyle: GoogleFonts.openSans(
+                                    textStyle: const TextStyle(fontSize: 12),
+                                  ),
+                                  hintText: 'Password',
+                                ),
+                              ),
+                            ))
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    SizedBox(
+                        height: 45,
+                        width: double.infinity,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF64a4fe),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                            onPressed: () {
+                              signUp(_emailEditingController.text,
+                                  _passwordEditingController.text);
+                            },
+                            child: _loading
+                                ? const SizedBox(
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.black,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : Text(
+                                    'Continue',
+                                    style: GoogleFonts.openSans(
+                                      textStyle: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black),
+                                    ),
+                                  ))),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Joined us before? ',
+                            style: GoogleFonts.openSans(
+                              textStyle: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black),
                             ),
                           ),
-                          onPressed: () {
-                            signUp(_emailEditingController.text,
-                                _passwordEditingController.text);
-                          },
-                          child: _loading
-                              ? const SizedBox(
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : Text(
-                                  'Register',
-                                  style: GoogleFonts.openSans(
-                                    textStyle: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ))),
-                ],
-              ),
-            )),
+                          TextSpan(
+                            text: 'Login',
+                            style: GoogleFonts.openSans(
+                              textStyle: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF64a4fe)),
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.push(context, MaterialPageRoute<void>(
+                                  builder: (BuildContext context) {
+                                    return const LoginScreen();
+                                  },
+                                ));
+                              },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+        ),
       ),
     );
   }
@@ -333,7 +264,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
             .createUserWithEmailAndPassword(email: email, password: password)
             .then((value) => {postDetailsToFirestore()})
             .catchError((e) {
-          Fluttertoast.showToast(msg: e!.message);
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(
+              elevation: 0,
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.transparent,
+              content: AwesomeSnackbarContent(
+                title: 'Oh no!',
+                message: e!.message,
+                contentType: ContentType.failure,
+              ),
+            ));
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const HomePage()));
         });
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
@@ -358,8 +302,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
           default:
             errorMessage = "An undefined Error happened.";
         }
-        Fluttertoast.showToast(msg: errorMessage!);
-        print(error.code);
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(
+            elevation: 0,
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            content: AwesomeSnackbarContent(
+              title: 'Oh No!',
+              message: errorMessage!,
+              contentType: ContentType.failure,
+            ),
+          ));
       }
     }
     setState(() => _loading = false);
@@ -382,7 +336,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         .set(userModel.toMap());
     Fluttertoast.showToast(msg: "Account created successfully :) ");
 
-    Navigator.pushAndRemoveUntil((context),
-        MaterialPageRoute(builder: (context) => HomePage()), (route) => false);
+    Navigator.pushAndRemoveUntil(
+        (context),
+        MaterialPageRoute(builder: (context) => const HomePage()),
+        (route) => false);
   }
 }

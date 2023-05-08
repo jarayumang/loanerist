@@ -6,6 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:loanerist/src/authentication/register.dart';
 import 'package:loanerist/src/features/home.dart';
 
+import 'forgot_password.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -152,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Navigator.push(context,
                                       MaterialPageRoute<void>(
                                     builder: (BuildContext context) {
-                                      return const RegisterScreen();
+                                      return const ForgotPasswordScreen();
                                     },
                                   ));
                                 },
