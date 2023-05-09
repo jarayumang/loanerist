@@ -51,9 +51,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('${loggedInUser.name}'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('${loggedInUser.name}'),
+      // ),
       body: _screens[_selectedScreenIndex]["screen"],
       bottomNavigationBar: Container(
         height: 70,
