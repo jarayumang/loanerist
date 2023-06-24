@@ -10,7 +10,7 @@ import 'package:loanerist/src/features/setting.dart';
 import '../models/user_model.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -22,10 +22,10 @@ class _HomePageState extends State<HomePage> {
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
-  final List _screens = [
+  final List<Map<String, dynamic>> _screens = [
     {"screen": const Dashboard(), "title": "Dashboard"},
-    {"screen": const Loan(), "title": "Loans"},
     {"screen": const Bill(), "title": "Bills"},
+    {"screen": const Loan(), "title": "Loans"},
     {"screen": const Setting(), "title": "Settings"}
   ];
 
@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
         .doc(user!.uid)
         .get()
         .then((value) {
-      loggedInUser = UserModel.fromMap(value.data());
+      loggedInUser = UserModel.fromMap(value.data() as Map<String, dynamic>);
       setState(() {});
     });
   }
@@ -51,33 +51,56 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('${loggedInUser.name}'),
-      // ),
+      backgroundColor: ColorConstants.lightBlack,
       body: _screens[_selectedScreenIndex]["screen"],
-      bottomNavigationBar: Container(
-        height: 70,
-        child: BottomNavigationBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          selectedItemColor: ColorConstants.appBlue,
-          unselectedItemColor: ColorConstants.lightBlack,
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _selectedScreenIndex,
-          onTap: _selectScreen,
-          items: const [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.dashboard_rounded), label: 'Dashboard'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.wallet_rounded), label: "Wallet"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.payments_rounded), label: "Loans"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.settings_rounded), label: "Settings")
-          ],
-        ),
+      bottomNavigationBar: Stack(
+        children: [
+          SizedBox(
+            height: 60,
+            child: BottomNavigationBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              showSelectedLabels: false,
+              showUnselectedLabels: false,
+              selectedItemColor: ColorConstants.appBlue,
+              unselectedItemColor: ColorConstants.darkWhite,
+              type: BottomNavigationBarType.fixed,
+              currentIndex: _selectedScreenIndex,
+              onTap: _selectScreen,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.dashboard_rounded),
+                  label: 'Dashboard',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.payments_rounded),
+                  label: "Loans",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.wallet_rounded),
+                  label: "Wallet",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.settings_rounded),
+                  label: "Settings",
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            left: (_selectedScreenIndex * (MediaQuery.of(context).size.width / _screens.length)) +
+                ((MediaQuery.of(context).size.width / _screens.length) - 25) / 2,
+            bottom: 0,
+            child: Container(
+              height: 3,
+              width: 25,
+              decoration: BoxDecoration(
+                color: ColorConstants.appBlue, // Adjust the color as needed
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(5)),
+              ), // Adjust the color as needed
+            ),
+          ),
+        ],
       ),
     );
   }

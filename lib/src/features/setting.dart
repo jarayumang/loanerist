@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:loanerist/src/constants/color.dart';
 
 import '../authentication/login.dart';
+import '../constants/page_style.dart';
+import '../constants/text_style.dart';
 
 class Setting extends StatefulWidget {
   const Setting({Key? key}) : super(key: key);
@@ -16,131 +17,38 @@ class _SettingState extends State<Setting> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.all(20),
+      backgroundColor: ColorConstants.lightBlack,
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'Settings',
+          style: homeScreenHeaderTextStyle,
+        ),
+        titleSpacing: 0.0,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        toolbarHeight: 60,
+      ),
+      body: Container(
+        padding: pagePadding,
+        child: Column(
           children: [
-            const SizedBox(
-              height: 10,
+            Expanded(
+              flex: 3,
+              child: Container(color: Colors.red, child: Text('red')),
             ),
-            SettingsGroup(
-              title: 'General',
-              titleTextStyle: TextStyle(
-                  color: ColorConstants.lightBlue,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15),
-              children: <Widget>[
-                SimpleSettingsTile(
-                  title: 'Language',
-                  titleTextStyle: TextStyle(
-                      color: ColorConstants.lightBlack,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
-                  subtitle: '',
-                  leading: Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          color: ColorConstants.green,
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Icon(
-                        Icons.translate_rounded,
-                        color: ColorConstants.darkWhite,
-                        size: 20,
-                      )),
-                  // onTap: ,
-                ),
-                SimpleSettingsTile(
-                    title: 'Logout',
-                    titleTextStyle: TextStyle(
-                        color: ColorConstants.lightBlack,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15),
-                    subtitle: '',
-                    leading: Container(
-                        padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            color: ColorConstants.appBlue,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        child: Icon(
-                          Icons.logout_rounded,
-                          color: ColorConstants.darkWhite,
-                          size: 20,
-                        )),
-                    onTap: () {
-                      logout(context);
-                    }),
-                SimpleSettingsTile(
-                  title: 'Delete Account',
-                  titleTextStyle: TextStyle(
-                      color: ColorConstants.lightBlack,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
-                  subtitle: '',
-                  leading: Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          color: ColorConstants.red,
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Icon(
-                        Icons.clear_rounded,
-                        color: ColorConstants.darkWhite,
-                        size: 20,
-                      )),
-                ),
-                // onTap: ,
-              ],
+            Expanded(
+              flex: 3,
+              child: Container(color: Colors.blue, child: Text('red')),
             ),
-            const SizedBox(
-              height: 10,
+            Expanded(
+              flex: 1,
+              child: Container(color: Colors.green, child: Text('red')),
             ),
-            SettingsGroup(
-              title: 'Feedback',
-              titleTextStyle: TextStyle(
-                  color: ColorConstants.lightBlue,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15),
-              children: <Widget>[
-                SimpleSettingsTile(
-                  title: 'Report Bug',
-                  titleTextStyle: TextStyle(
-                      color: ColorConstants.lightBlack,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
-                  subtitle: '',
-                  leading: Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          color: ColorConstants.appBlue,
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Icon(
-                        Icons.bug_report_rounded,
-                        color: ColorConstants.darkWhite,
-                        size: 20,
-                      )),
-                  // onTap: ,
-                ),
-                SimpleSettingsTile(
-                  title: 'Send Feedback',
-                  titleTextStyle: TextStyle(
-                      color: ColorConstants.lightBlack,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
-                  subtitle: '',
-                  leading: Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          color: ColorConstants.red,
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Icon(
-                        Icons.thumb_up_rounded,
-                        color: ColorConstants.darkWhite,
-                        size: 20,
-                      )),
-                  // onTap: ,
-                ),
-              ],
-            )
+            Expanded(
+              flex: 3,
+              child: Container(color: Colors.white, child: Text('red')),
+            ),
           ],
         ),
       ),
@@ -153,3 +61,7 @@ class _SettingState extends State<Setting> {
         MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
 }
+
+// onTap: () {
+// logout(context);
+// }

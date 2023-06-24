@@ -16,6 +16,8 @@ class ColorConstants {
   static Color lightBlue = hexToColor('#4383D1');
   static Color darkWhite = hexToColor('#fefffe');
   static Color lightBlack = hexToColor('#1c2d36');
+  static Color lightBlackBorder = hexToColor('#273f4c');
+  static Color lightBlackCard = hexToColor('#21353f');
   static Color red = hexToColor('#ac1116');
   static Color green = hexToColor('#19ac11');
 }

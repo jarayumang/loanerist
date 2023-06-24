@@ -4,8 +4,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loanerist/src/authentication/register.dart';
+import 'package:loanerist/src/constants/color.dart';
+import 'package:loanerist/src/constants/text_style.dart';
 import 'package:loanerist/src/features/home.dart';
 
+import '../constants/page_style.dart';
 import 'forgot_password.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -30,11 +33,11 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: const Color(0xFFfffefe),
+      backgroundColor: ColorConstants.backgroundColor,
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
-              padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
+              padding: pagePadding,
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -42,12 +45,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.asset('assets/images/login.jpg'),
-                    const Align(
+                    Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         "Login",
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.w800),
+                        style: authScreenHeaderTextStyle,
                       ),
                     ),
                     const SizedBox(
@@ -68,13 +70,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               keyboardType: TextInputType.emailAddress,
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  return ("Please Enter Your Email");
+                                  return ("Please enter your email address");
                                 }
-                                // reg expression for email validation
                                 if (!RegExp(
                                         "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
                                     .hasMatch(value)) {
-                                  return ("Please Enter a valid email");
+                                  return ('Please enter a valid email address');
                                 }
                                 return null;
                               },
@@ -82,11 +83,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 _emailController.text = value!;
                               },
                               textInputAction: TextInputAction.next,
-                              decoration: InputDecoration(
-                                hintStyle: GoogleFonts.openSans(
-                                  textStyle: const TextStyle(fontSize: 12),
-                                ),
+                              decoration: const InputDecoration(
+                                hintStyle: hintTextStyle,
                                 hintText: 'Email ID',
+                                errorStyle: errorTextStyle,
                               ),
                             ),
                           ),
@@ -110,23 +110,23 @@ class _LoginScreenState extends State<LoginScreen> {
                               controller: _passwordController,
                               obscureText: true,
                               validator: (value) {
-                                RegExp regex = new RegExp(r'^.{6,}$');
+                                RegExp regex = RegExp(r'^.{6,}$');
                                 if (value!.isEmpty) {
-                                  return ("Password is required for login");
+                                  return ("Password is required");
                                 }
                                 if (!regex.hasMatch(value)) {
-                                  return ("Enter Valid Password(Min. 6 Character)");
+                                  return ("Enter a valid password (Min. 6 Character)");
                                 }
+                                return null;
                               },
                               onSaved: (value) {
                                 _passwordController.text = value!;
                               },
                               textInputAction: TextInputAction.done,
-                              decoration: InputDecoration(
-                                hintStyle: GoogleFonts.openSans(
-                                  textStyle: const TextStyle(fontSize: 12),
-                                ),
+                              decoration: const InputDecoration(
+                                hintStyle: hintTextStyle,
                                 hintText: 'Password',
+                                errorStyle: errorTextStyle,
                               ),
                             ),
                           ),
@@ -144,12 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               TextSpan(
                                 text: 'Forgot Password?',
-                                style: GoogleFonts.openSans(
-                                  textStyle: const TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w700,
-                                      color: Color(0xFF64a4fe)),
-                                ),
+                                style: linkTextStyle,
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     Navigator.push(context,
@@ -183,21 +178,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                   _passwordController.text);
                             },
                             child: _loading
-                                ? const SizedBox(
-                                    height: 20,
+                                ? SizedBox(
+                                    height: 30,
+                                    width: 30,
                                     child: CircularProgressIndicator(
-                                      color: Colors.black,
-                                      strokeWidth: 2,
+                                      color: ColorConstants.darkWhite,
+                                      strokeWidth: 4,
                                     ),
                                   )
                                 : Text(
                                     'Login',
-                                    style: GoogleFonts.openSans(
-                                      textStyle: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black),
-                                    ),
+                                    style: noLinkTextStyle,
                                   ))),
                     const SizedBox(
                       height: 30,
@@ -207,21 +198,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           TextSpan(
                             text: 'New to Loanerist? ',
-                            style: GoogleFonts.openSans(
-                              textStyle: const TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black),
-                            ),
+                            style: noLinkTextStyle,
                           ),
                           TextSpan(
                             text: 'Register',
-                            style: GoogleFonts.openSans(
-                              textStyle: const TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF64a4fe)),
-                            ),
+                            style: linkTextStyle,
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 Navigator.push(context, MaterialPageRoute<void>(
