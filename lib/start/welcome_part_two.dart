@@ -1,12 +1,16 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_stepper/easy_stepper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loanerist/constants/colors.dart';
+import 'package:loanerist/pages/dashboard.dart';
+
+enum SalaryEnum { daily, weekly, biWeekly, monthly }
 
 class WelcomeTwo extends StatefulWidget {
-  const WelcomeTwo({Key? key}) : super(key: key);
+  const WelcomeTwo({super.key});
 
   @override
   State<WelcomeTwo> createState() => _WelcomeTwoState();
@@ -14,16 +18,29 @@ class WelcomeTwo extends StatefulWidget {
 
 class _WelcomeTwoState extends State<WelcomeTwo> {
   int activeStep = 0;
+  SalaryEnum? selectedSalary;
 
   bool _fullNameController = false;
   bool _mobileController = false;
+  bool _salaryController = false;
+  bool _salaryDateController = false;
 
   PageController _pageController = PageController();
-
+  //PROFILE CONTROLLERS
   TextEditingController fullNameController = TextEditingController();
   TextEditingController genderController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
   TextEditingController birthdayController = TextEditingController();
+  //SALARY CONTROLLERS
+  TextEditingController salaryController = TextEditingController();
+  TextEditingController salaryDateController = TextEditingController();
+  TextEditingController salaryEnumController = TextEditingController();
+
+  void handleOptionChanged(SalaryEnum value) {
+    setState(() {
+      selectedSalary = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +49,7 @@ class _WelcomeTwoState extends State<WelcomeTwo> {
       home: Scaffold(
         body: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+            padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
             child: Column(
               children: [
                 const SizedBox(
@@ -67,27 +84,26 @@ class _WelcomeTwoState extends State<WelcomeTwo> {
                   showLoadingAnimation: false,
                   steps: [
                     EasyStep(
-                      icon: Icon(FaIcon(FontAwesomeIcons.user).icon),
+                      icon: Icon(const FaIcon(FontAwesomeIcons.user).icon),
                     ),
                     EasyStep(
-                      icon: Icon(FaIcon(FontAwesomeIcons.moneyBill).icon),
-                    ),
-                    EasyStep(
-                      icon: Icon(FaIcon(FontAwesomeIcons.gear).icon),
-                    ),
+                      icon: Icon(const FaIcon(FontAwesomeIcons.moneyBill).icon),
+                    )
                   ],
                   onStepReached: (index) {
                     setState(() {
-                      activeStep = index;
-                      _pageController.animateToPage(index,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.ease);
+                      if (index > activeStep) {
+                        activeStep = index;
+                        _pageController.animateToPage(index,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.ease);
+                      }
                     });
                   },
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
-                  height: 400, // Adjust the height of the PageView
+                  height: 600,
                   child: PageView(
                     controller: _pageController,
                     physics:
@@ -105,124 +121,23 @@ class _WelcomeTwoState extends State<WelcomeTwo> {
                             const SizedBox(
                               height: 50,
                             ),
-                            SizedBox(
-                              width: 300,
-                              height: 50,
-                              child: TextField(
-                                style: const TextStyle(fontSize: 13),
-                                controller: fullNameController,
-                                decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFF76ABAE), width: 1),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFF76ABAE),
-                                            width: 1)),
-                                    errorText: _fullNameController
-                                        ? "Full Name can't be empty"
-                                        : null,
-                                    errorBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFFD86951),
-                                            width: 1)),
-                                    labelText: "Full Name",
-                                    labelStyle: const TextStyle(
-                                        color: Color(0xFFb2b7bf),
-                                        fontSize: 13.0)),
-                              ),
-                            ),
-                            SizedBox(
+                            welcomeTextField(fullNameController,
+                                _fullNameController, "Full Name"),
+                            const SizedBox(
                               height: 10,
                             ),
-                            SizedBox(
-                              width: 300,
-                              height: 50,
-                              child: TextField(
-                                style: const TextStyle(fontSize: 13),
-                                controller: mobileController,
-                                decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFF76ABAE), width: 1),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFF76ABAE),
-                                            width: 1)),
-                                    errorText: _fullNameController
-                                        ? "Mobile Number can't be empty"
-                                        : null,
-                                    errorBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFFD86951),
-                                            width: 1)),
-                                    labelText: "Mobile Number",
-                                    labelStyle: const TextStyle(
-                                        color: Color(0xFFb2b7bf),
-                                        fontSize: 13.0)),
-                              ),
-                            ),
-                            SizedBox(
+                            welcomeTextField(mobileController,
+                                _mobileController, "Mobile Number"),
+                            const SizedBox(
                               height: 10,
                             ),
-                            SizedBox(
-                              width: 300,
-                              height: 50,
-                              child: TextField(
-                                style: const TextStyle(fontSize: 13),
-                                controller: genderController,
-                                decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFF76ABAE), width: 1),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFF76ABAE),
-                                            width: 1)),
-                                    labelText: "Gender",
-                                    labelStyle: const TextStyle(
-                                        color: Color(0xFFb2b7bf),
-                                        fontSize: 13.0)),
-                              ),
-                            ),
-                            SizedBox(
+                            welcomeTextField(genderController, null, "Gender"),
+                            const SizedBox(
                               height: 10,
                             ),
-                            SizedBox(
-                              width: 300,
-                              height: 50,
-                              child: TextField(
-                                style: const TextStyle(fontSize: 13),
-                                controller: birthdayController,
-                                decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFF76ABAE), width: 1),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFF76ABAE),
-                                            width: 1)),
-                                    labelText: "Birthday",
-                                    labelStyle: const TextStyle(
-                                        color: Color(0xFFb2b7bf),
-                                        fontSize: 13.0)),
-                              ),
-                            ),
-                            SizedBox(
+                            welcomeTextField(
+                                birthdayController, null, "Birthday"),
+                            const SizedBox(
                               height: 10,
                             ),
                             SizedBox(
@@ -257,7 +172,9 @@ class _WelcomeTwoState extends State<WelcomeTwo> {
                                     _mobileController =
                                         mobileController.text.isEmpty;
 
-                                    if (activeStep < 2) {
+                                    if (activeStep < 2 &&
+                                        !_fullNameController &&
+                                        !_mobileController) {
                                       activeStep++;
                                       _pageController.animateToPage(activeStep,
                                           duration:
@@ -286,127 +203,127 @@ class _WelcomeTwoState extends State<WelcomeTwo> {
                                         fontSize: 20,
                                         fontWeight: FontWeight.w600,
                                         color: ColorConstants.blackColor))),
-                            SizedBox(
+                            const SizedBox(
                               height: 50,
                             ),
-                            SizedBox(
-                              width: 300,
-                              height: 50,
-                              child: TextField(
-                                style: const TextStyle(fontSize: 13),
-                                controller: fullNameController,
-                                decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFF76ABAE), width: 1),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFF76ABAE),
-                                            width: 1)),
-                                    errorText: _fullNameController
-                                        ? "Full Name can't be empty"
-                                        : null,
-                                    errorBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFFD86951),
-                                            width: 1)),
-                                    labelText: "Full Name",
-                                    labelStyle: const TextStyle(
-                                        color: Color(0xFFb2b7bf),
-                                        fontSize: 13.0)),
-                              ),
-                            ),
-                            SizedBox(
+                            welcomeTextField(
+                                salaryController, _salaryController, "Salary"),
+                            const SizedBox(
                               height: 10,
                             ),
                             SizedBox(
                               width: 300,
-                              height: 50,
-                              child: TextField(
-                                style: const TextStyle(fontSize: 13),
-                                controller: mobileController,
-                                decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFF76ABAE), width: 1),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFF76ABAE),
-                                            width: 1)),
-                                    errorText: _fullNameController
-                                        ? "Mobile Number can't be empty"
-                                        : null,
-                                    errorBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFFD86951),
-                                            width: 1)),
-                                    labelText: "Mobile Number",
-                                    labelStyle: const TextStyle(
-                                        color: Color(0xFFb2b7bf),
-                                        fontSize: 13.0)),
+                              height: 80,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  DateTime? selectedDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(2000),
+                                    lastDate: DateTime(2100),
+                                  );
+                                  if (selectedDate != null) {
+                                    String formattedDate =
+                                        "${selectedDate.year}-${selectedDate.month}-${selectedDate.day}";
+                                    setState(() {
+                                      salaryDateController.text =
+                                          formattedDate; // Update the controller's text within setState
+                                    });
+                                  }
+                                },
+                                child: AbsorbPointer(
+                                  child: TextField(
+                                    style: const TextStyle(fontSize: 13),
+                                    controller: salaryDateController,
+                                    decoration: InputDecoration(
+                                      contentPadding:
+                                          const EdgeInsets.all(20.0),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              color: Color(0xFF76ABAE),
+                                              width: 1),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          borderSide: const BorderSide(
+                                              color: Color(0xFF76ABAE),
+                                              width: 1)),
+                                      errorText: _salaryDateController
+                                          ? "Salary Date can't be empty"
+                                          : null,
+                                      errorBorder: (OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          borderSide: const BorderSide(
+                                              color: Color(0xFFD86951),
+                                              width: 1))),
+                                      labelText: "Salary Date",
+                                      labelStyle: const TextStyle(
+                                          color: Color(0xFFb2b7bf),
+                                          fontSize: 13.0),
+                                      suffixIcon: const Align(
+                                        widthFactor: 1.0,
+                                        heightFactor: 1.0,
+                                        child: FaIcon(
+                                          FontAwesomeIcons
+                                              .calendar, // Use the desired icon
+                                          color: Colors.grey,
+                                          size:
+                                              15, // Define the color of the icon
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             SizedBox(
                               width: 300,
-                              height: 50,
-                              child: TextField(
-                                style: const TextStyle(fontSize: 13),
-                                controller: genderController,
-                                decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFF76ABAE), width: 1),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFF76ABAE),
-                                            width: 1)),
-                                    labelText: "Gender",
-                                    labelStyle: const TextStyle(
-                                        color: Color(0xFFb2b7bf),
-                                        fontSize: 13.0)),
+                              height: 250,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  RadioListTile(
+                                    title: const Text('Daily'),
+                                    value: SalaryEnum.daily,
+                                    groupValue: selectedSalary,
+                                    onChanged: (value) {
+                                      handleOptionChanged(value as SalaryEnum);
+                                    },
+                                  ),
+                                  RadioListTile(
+                                    title: const Text('Weekly'),
+                                    value: SalaryEnum.weekly,
+                                    groupValue: selectedSalary,
+                                    onChanged: (value) {
+                                      handleOptionChanged(value as SalaryEnum);
+                                    },
+                                  ),
+                                  RadioListTile(
+                                    title: const Text('Bi-Weekly'),
+                                    value: SalaryEnum.biWeekly,
+                                    groupValue: selectedSalary,
+                                    onChanged: (value) {
+                                      handleOptionChanged(value as SalaryEnum);
+                                    },
+                                  ),
+                                  RadioListTile(
+                                    title: const Text('Monthly'),
+                                    value: SalaryEnum.monthly,
+                                    groupValue: selectedSalary,
+                                    onChanged: (value) {
+                                      handleOptionChanged(value as SalaryEnum);
+                                    },
+                                  ),
+                                ],
                               ),
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            SizedBox(
-                              width: 300,
-                              height: 50,
-                              child: TextField(
-                                style: const TextStyle(fontSize: 13),
-                                controller: birthdayController,
-                                decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFF76ABAE), width: 1),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color: Color(0xFF76ABAE),
-                                            width: 1)),
-                                    labelText: "Birthday",
-                                    labelStyle: const TextStyle(
-                                        color: Color(0xFFb2b7bf),
-                                        fontSize: 13.0)),
-                              ),
-                            ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             SizedBox(
@@ -436,21 +353,53 @@ class _WelcomeTwoState extends State<WelcomeTwo> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    _fullNameController =
-                                        fullNameController.text.isEmpty;
-                                    _mobileController =
-                                        mobileController.text.isEmpty;
+                                    addDetails(
+                                      fullNameController,
+                                      genderController,
+                                      mobileController,
+                                      birthdayController,
+                                      salaryController,
+                                      salaryDateController,
+                                      salaryEnumController,
+                                    );
+                                    _salaryController =
+                                        salaryController.text.isEmpty;
+                                    _salaryDateController =
+                                        salaryDateController.text.isEmpty;
 
-                                    if (activeStep < 2) {
-                                      activeStep++;
-                                      _pageController.animateToPage(activeStep,
-                                          duration:
-                                              const Duration(milliseconds: 300),
-                                          curve: Curves.ease);
+                                    if (!_salaryController &&
+                                        !_salaryDateController) {
+                                      Navigator.push(
+                                        context,
+                                        PageRouteBuilder(
+                                          pageBuilder: (context, animation,
+                                                  secondaryAnimation) =>
+                                              Dashboard(),
+                                          transitionsBuilder: (context,
+                                              animation,
+                                              secondaryAnimation,
+                                              child) {
+                                            var begin = Offset(1.0, 0.0);
+                                            var end = Offset.zero;
+                                            var curve = Curves.ease;
+                                            var tween = Tween(
+                                                    begin: begin, end: end)
+                                                .chain(
+                                                    CurveTween(curve: curve));
+                                            var offsetAnimation =
+                                                animation.drive(tween);
+
+                                            return SlideTransition(
+                                              position: offsetAnimation,
+                                              child: child,
+                                            );
+                                          },
+                                        ),
+                                      );
                                     }
                                   });
                                 },
-                                child: Text('Next Step',
+                                child: Text("Let's Go!",
                                     style: GoogleFonts.openSans(
                                         textStyle: TextStyle(
                                             fontSize: 14,
@@ -459,12 +408,6 @@ class _WelcomeTwoState extends State<WelcomeTwo> {
                               ),
                             ),
                           ],
-                        ),
-                      ),
-                      Container(
-                        color: Colors.green,
-                        child: Center(
-                          child: Text('Settings Page'),
                         ),
                       ),
                     ],
@@ -477,4 +420,75 @@ class _WelcomeTwoState extends State<WelcomeTwo> {
       ),
     );
   }
+}
+
+SizedBox welcomeTextField(controller, bool? error, label) {
+  return SizedBox(
+    width: 300,
+    height: 80,
+    child: TextField(
+      style: const TextStyle(fontSize: 13),
+      controller: controller,
+      decoration: InputDecoration(
+          contentPadding: const EdgeInsets.all(20.0),
+          focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Color(0xFF76ABAE), width: 1),
+              borderRadius: BorderRadius.circular(10)),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Color(0xFF76ABAE), width: 1)),
+          errorText:
+              error != null ? (error ? "$label can't be empty" : null) : null,
+          errorBorder: error != null
+              ? (OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide:
+                      const BorderSide(color: Color(0xFFD86951), width: 1)))
+              : null,
+          labelText: label,
+          labelStyle:
+              const TextStyle(color: Color(0xFFb2b7bf), fontSize: 13.0)),
+    ),
+  );
+}
+
+Future<void> addDetails(
+  TextEditingController fullNameController,
+  TextEditingController genderController,
+  TextEditingController? mobileController,
+  TextEditingController? birthdayController,
+  TextEditingController salaryController,
+  TextEditingController salaryDateController,
+  TextEditingController salaryEnumController,
+) async {
+  try {
+    // Get the current user
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      CollectionReference loans =
+          FirebaseFirestore.instance.collection('user_info/${user.uid}');
+      print('start adding');
+      await loans.add({
+        'full_name': fullNameController,
+        'gender': genderController,
+        'mobile': mobileController,
+        'birthday': birthdayController,
+        'current_balance': 0,
+        'left_balance': 0,
+        'offline_mode': false,
+        'dark_mode': false,
+      });
+
+      CollectionReference salary =
+          FirebaseFirestore.instance.collection('user_info/${user.uid}/salary');
+
+      await salary.add({
+        'salary': salaryController,
+        'salary_date': salaryDateController,
+        'salary_enum': salaryEnumController,
+      });
+    } else {
+      print('User not signed in!');
+    }
+  } catch (e) {}
 }

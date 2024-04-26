@@ -30,7 +30,7 @@ class _ProfileState extends State<Profile> {
       // Navigate to login screen or any other screen you want to navigate after logout
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const LogIn()),
-            (Route<dynamic> route) => false,
+        (Route<dynamic> route) => false,
       );
     } catch (e) {
       toastification.show(
@@ -116,41 +116,41 @@ class _ProfileState extends State<Profile> {
                     StreamBuilder<DocumentSnapshot>(
                       stream: userDataStream,
                       builder: (context, snapshot) {
-                        Map<String, dynamic>? userData =
-                            snapshot.data?.data() as Map<String, dynamic>?;
+                        Map<String, dynamic> userData =
+                            snapshot.data!.data() as Map<String, dynamic>;
 
-                        return buildBalanceWidget(userData!,
+                        return buildBalanceWidget(userData,
                             FontAwesomeIcons.user, 'Full Name', 'full_name');
                       },
                     ),
                     StreamBuilder<DocumentSnapshot>(
                       stream: userDataStream,
                       builder: (context, snapshot) {
-                        Map<String, dynamic>? userData =
-                            snapshot.data?.data() as Map<String, dynamic>?;
+                        Map<String, dynamic> userData =
+                            snapshot.data!.data() as Map<String, dynamic>;
 
-                        return buildBalanceWidget(userData!,
+                        return buildBalanceWidget(userData,
                             FontAwesomeIcons.envelope, 'Email', 'email');
                       },
                     ),
                     StreamBuilder<DocumentSnapshot>(
                       stream: userDataStream,
                       builder: (context, snapshot) {
-                        Map<String, dynamic>? userData =
-                            snapshot.data?.data() as Map<String, dynamic>?;
+                        Map<String, dynamic> userData =
+                            snapshot.data!.data() as Map<String, dynamic>;
 
-                        return buildBalanceWidget(userData!,
+                        return buildBalanceWidget(userData,
                             FontAwesomeIcons.venusMars, 'Gender', 'gender');
                       },
                     ),
                     StreamBuilder<DocumentSnapshot>(
                       stream: userDataStream,
                       builder: (context, snapshot) {
-                        Map<String, dynamic>? userData =
-                            snapshot.data?.data() as Map<String, dynamic>?;
+                        Map<String, dynamic> userData =
+                            snapshot.data!.data() as Map<String, dynamic>;
 
                         return buildBalanceWidget(
-                            userData!,
+                            userData,
                             FontAwesomeIcons.birthdayCake,
                             'Birthday',
                             'birthday');
@@ -159,10 +159,10 @@ class _ProfileState extends State<Profile> {
                     StreamBuilder<DocumentSnapshot>(
                       stream: userDataStream,
                       builder: (context, snapshot) {
-                        Map<String, dynamic>? userData =
-                            snapshot.data?.data() as Map<String, dynamic>?;
+                        Map<String, dynamic> userData =
+                            snapshot.data!.data() as Map<String, dynamic>;
 
-                        return buildBalanceWidget(userData!,
+                        return buildBalanceWidget(userData,
                             FontAwesomeIcons.phone, 'Change mobile', 'mobile');
                       },
                     ),
@@ -195,11 +195,11 @@ class _ProfileState extends State<Profile> {
                     StreamBuilder<DocumentSnapshot>(
                       stream: userDataStream,
                       builder: (context, snapshot) {
-                        Map<String, dynamic>? userData =
-                            snapshot.data?.data() as Map<String, dynamic>?;
+                        Map<String, dynamic> userData =
+                            snapshot.data!.data() as Map<String, dynamic>;
 
                         return buildDisplayWidget(
-                            userData!,
+                            userData,
                             FontAwesomeIcons.solidMoon,
                             'Dark Mode',
                             'dark_mode');
@@ -208,11 +208,11 @@ class _ProfileState extends State<Profile> {
                     StreamBuilder<DocumentSnapshot>(
                       stream: userDataStream,
                       builder: (context, snapshot) {
-                        Map<String, dynamic>? userData =
-                            snapshot.data?.data() as Map<String, dynamic>?;
+                        Map<String, dynamic> userData =
+                            snapshot.data!.data() as Map<String, dynamic>;
 
                         return buildDisplayWidget(
-                            userData!,
+                            userData,
                             FontAwesomeIcons.wifi,
                             'Offline Mode',
                             'offline_mode');
@@ -221,10 +221,10 @@ class _ProfileState extends State<Profile> {
                     StreamBuilder<DocumentSnapshot>(
                       stream: userDataStream,
                       builder: (context, snapshot) {
-                        Map<String, dynamic>? userData =
-                            snapshot.data?.data() as Map<String, dynamic>?;
+                        Map<String, dynamic> userData =
+                            snapshot.data!.data() as Map<String, dynamic>;
 
-                        return buildBalanceWidget(userData!,
+                        return buildBalanceWidget(userData,
                             FontAwesomeIcons.lock, 'Change password', 'gender');
                       },
                     ),
@@ -290,52 +290,56 @@ class _ProfileState extends State<Profile> {
                         ],
                       ),
                     ),
-                        Container(
-                          height: 40,
-                          padding: const EdgeInsets.all(5.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Container(
+                      height: 40,
+                      padding: const EdgeInsets.all(5.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
                             children: [
-                              Row(
-                                children: [
-                                  FaIcon(
-                                    FontAwesomeIcons.solidFile,
-                                    color: ColorConstants.blackColor,
-                                    size: 15,
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    'Terms and Conditions',
-                                    style: TextStyle(
-                                      color: ColorConstants.blackColor,
-                                      fontFamily: 'NoirPro',
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
                               FaIcon(
-                                FontAwesomeIcons.chevronRight,
+                                FontAwesomeIcons.solidFile,
                                 color: ColorConstants.blackColor,
-                                size: 13,
+                                size: 15,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'Terms and Conditions',
+                                style: TextStyle(
+                                  color: ColorConstants.blackColor,
+                                  fontFamily: 'NoirPro',
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ],
                           ),
-                        )
+                          FaIcon(
+                            FontAwesomeIcons.chevronRight,
+                            color: ColorConstants.blackColor,
+                            size: 13,
+                          ),
+                        ],
+                      ),
+                    )
                   ])),
               SizedBox(height: 20),
               Container(
                 width: double.infinity,
                 child: OutlinedButton(
                   style: ButtonStyle(
-                    side: MaterialStateProperty.all<BorderSide>(const BorderSide(color: Colors.red)), // Border color
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.red), // Background color
-                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // Text color
-                    overlayColor: MaterialStateProperty.all<Color>(Colors.red.withOpacity(0.1)), // Color when pressed
+                    side: MaterialStateProperty.all<BorderSide>(
+                        const BorderSide(color: Colors.red)), // Border color
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Colors.red), // Background color
+                    foregroundColor: MaterialStateProperty.all<Color>(
+                        Colors.white), // Text color
+                    overlayColor: MaterialStateProperty.all<Color>(
+                        Colors.red.withOpacity(0.1)), // Color when pressed
                     shape: MaterialStateProperty.all<OutlinedBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
@@ -356,7 +360,6 @@ class _ProfileState extends State<Profile> {
                           fontWeight: FontWeight.w500)),
                 ),
               )
-
             ],
           ),
         ));
