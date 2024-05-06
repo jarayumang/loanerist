@@ -369,7 +369,7 @@ class _WelcomeTwoState extends State<WelcomeTwo> {
 
                                     if (!_salaryController &&
                                         !_salaryDateController) {
-                                      Navigator.push(
+                                      Navigator.pushReplacement(
                                         context,
                                         PageRouteBuilder(
                                           pageBuilder: (context, animation,
@@ -462,30 +462,24 @@ Future<void> addDetails(
   TextEditingController salaryEnumController,
 ) async {
   try {
-    // Get the current user
     User? user = FirebaseAuth.instance.currentUser;
+
     if (user != null) {
-      CollectionReference loans =
-          FirebaseFirestore.instance.collection('user_info/${user.uid}');
-      print('start adding');
-      await loans.add({
-        'full_name': fullNameController,
-        'gender': genderController,
-        'mobile': mobileController,
-        'birthday': birthdayController,
+      CollectionReference userInfoRef =
+          FirebaseFirestore.instance.collection('user_info');
+
+      userInfoRef.doc(user.uid).set({
+        'full_name': fullNameController.text,
+        'gender': genderController.text,
+        'mobile': mobileController?.text ?? '',
+        'birthday': birthdayController?.text ?? '',
         'current_balance': 0,
         'left_balance': 0,
         'offline_mode': false,
         'dark_mode': false,
-      });
-
-      CollectionReference salary =
-          FirebaseFirestore.instance.collection('user_info/${user.uid}/salary');
-
-      await salary.add({
-        'salary': salaryController,
-        'salary_date': salaryDateController,
-        'salary_enum': salaryEnumController,
+        'salary': salaryController.text,
+        'salary_date': salaryDateController.text,
+        'salary_enum': salaryEnumController.text,
       });
     } else {
       print('User not signed in!');

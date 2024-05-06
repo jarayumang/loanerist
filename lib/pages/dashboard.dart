@@ -60,7 +60,7 @@ class _DashboardState extends State<Dashboard> {
         ),
         backgroundColor: ColorConstants.whiteColor,
       ),
-        body: Container(
+      body: Container(
         padding: const EdgeInsets.all(15.0),
         color: ColorConstants.whiteColor,
         child: Column(
@@ -77,7 +77,7 @@ class _DashboardState extends State<Dashboard> {
                 }
 
                 Map<String, dynamic>? userData =
-                snapshot.data?.data() as Map<String, dynamic>?;
+                    snapshot.data?.data() as Map<String, dynamic>?;
 
                 if (userData == null) {
                   return const Text('No user data found');
@@ -95,12 +95,54 @@ class _DashboardState extends State<Dashboard> {
                 }
 
                 if (!snapshot.hasData) {
-                  return const Text('No loans found');
+                  return Container(
+                      padding: const EdgeInsets.all(10),
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Latest Loan Dues',
+                                style: TextStyle(
+                                    color: ColorConstants.blackColor,
+                                    fontFamily: 'NoirPro',
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w800)),
+                            Expanded(
+                              child: ListView(
+                                padding: const EdgeInsets.only(top: 10.0),
+                                children: [
+                                  Text('No loans found'),
+                                ],
+                              ),
+                            )
+                          ]));
                 }
 
                 List<DocumentSnapshot> loanDocs = snapshot.data!.docs;
                 if (loanDocs.isEmpty) {
-                  return const Text('No loans found');
+                  return Container(
+                      padding: const EdgeInsets.all(10),
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Latest Loan Dues',
+                                style: TextStyle(
+                                    color: ColorConstants.blackColor,
+                                    fontFamily: 'NoirPro',
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w800)),
+                            Expanded(
+                              child: ListView(
+                                padding: const EdgeInsets.only(top: 10.0),
+                                children: [
+                                  Text('No loans found'),
+                                ],
+                              ),
+                            )
+                          ]));
                 }
 
                 return buildLatestLoanDuesWidget(loanDocs);
@@ -137,7 +179,8 @@ class _DashboardState extends State<Dashboard> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child: Text(formatNumberWithCommas(userData['current_balance']),
+                        child: Text(
+                            formatNumberWithCommas(userData['current_balance']),
                             style: TextStyle(
                                 fontFamily: 'NoirPro',
                                 color: ColorConstants.blackColor,
@@ -160,19 +203,17 @@ class _DashboardState extends State<Dashboard> {
                         color: Colors.transparent,
                         borderRadius: BorderRadius.circular(100),
                         border: Border.all(
-                            width: 1,
-                            color: ColorConstants.blackColor)),
-                    child: Text('PHP ${userData['left_balance']} left in budget',
-                        style: TextStyle(
-                          color: ColorConstants.blackColor,
-                          fontFamily: 'NoirPro',
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                        )),
+                            width: 1, color: ColorConstants.blackColor)),
+                    child:
+                        Text('PHP ${userData['left_balance']} left in budget',
+                            style: TextStyle(
+                              color: ColorConstants.blackColor,
+                              fontFamily: 'NoirPro',
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                            )),
                   ),
-                ]
-            )
-        ),
+                ])),
         SizedBox(
           height: 145,
           child: Padding(
@@ -182,9 +223,11 @@ class _DashboardState extends State<Dashboard> {
               padding: const EdgeInsets.only(top: 20.0),
               children: <Widget>[
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => const Wallet()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Wallet()));
                   },
                   child: Container(
                     width: 130,
@@ -194,8 +237,7 @@ class _DashboardState extends State<Dashboard> {
                         color: ColorConstants.whiteAccentColor,
                         borderRadius: BorderRadius.circular(25),
                         border: Border.all(
-                            width: 1,
-                            color: ColorConstants.whiteAccentColor)),
+                            width: 1, color: ColorConstants.whiteAccentColor)),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -219,9 +261,9 @@ class _DashboardState extends State<Dashboard> {
                   width: 10,
                 ),
                 GestureDetector(
-                  onTap: (){
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => const Loans()));
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const Loans()));
                   },
                   child: Container(
                     width: 130,
@@ -231,8 +273,7 @@ class _DashboardState extends State<Dashboard> {
                         color: ColorConstants.whiteAccentColor,
                         borderRadius: BorderRadius.circular(25),
                         border: Border.all(
-                            width: 1,
-                            color: ColorConstants.whiteAccentColor)),
+                            width: 1, color: ColorConstants.whiteAccentColor)),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -256,9 +297,11 @@ class _DashboardState extends State<Dashboard> {
                   width: 10,
                 ),
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => const Schedule()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Schedule()));
                   },
                   child: Container(
                     width: 130,
@@ -268,8 +311,7 @@ class _DashboardState extends State<Dashboard> {
                         color: ColorConstants.whiteAccentColor,
                         borderRadius: BorderRadius.circular(25),
                         border: Border.all(
-                            width: 1,
-                            color: ColorConstants.whiteAccentColor)),
+                            width: 1, color: ColorConstants.whiteAccentColor)),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -293,9 +335,11 @@ class _DashboardState extends State<Dashboard> {
                   width: 10,
                 ),
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => const Profile()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Profile()));
                   },
                   child: Container(
                     width: 130,
@@ -305,8 +349,7 @@ class _DashboardState extends State<Dashboard> {
                         color: ColorConstants.whiteAccentColor,
                         borderRadius: BorderRadius.circular(25),
                         border: Border.all(
-                            width: 1,
-                            color: ColorConstants.whiteAccentColor)),
+                            width: 1, color: ColorConstants.whiteAccentColor)),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -378,7 +421,8 @@ class _DashboardState extends State<Dashboard> {
                                       borderRadius: BorderRadius.circular(5),
                                       border: Border.all(
                                           width: 1,
-                                          color: ColorConstants.blueAccentColor)),
+                                          color:
+                                              ColorConstants.blueAccentColor)),
                                   child: Center(
                                     child: FaIcon(
                                       FontAwesomeIcons.solidCreditCard,
@@ -423,12 +467,10 @@ class _DashboardState extends State<Dashboard> {
                       )
                     ],
                   );
-                }).toList()
-            ),
+                }).toList()),
           ),
         ],
       ),
     );
   }
-
 }
